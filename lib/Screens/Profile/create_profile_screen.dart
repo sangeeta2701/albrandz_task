@@ -70,7 +70,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       "Create Profile",
                       style: blackMainHeading,
                     ),
-                    height20,
+                    height12,
                     Text(
                       "Enter Full Name",
                       style: greyTextStyle,

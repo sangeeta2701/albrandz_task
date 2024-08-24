@@ -1,3 +1,4 @@
+import 'package:albrandz_task/Screens/Home/home_screen.dart';
 import 'package:albrandz_task/Screens/splash_screen.dart';
 import 'package:albrandz_task/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
+      // home: HomeScreen(),
       theme: ThemeData(
              
               primaryColor: themeColor,

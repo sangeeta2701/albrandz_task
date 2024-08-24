@@ -1,7 +1,7 @@
+import 'package:albrandz_task/Screens/Home/home_screen.dart';
 import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/Widgets/sizedBox.dart';
 import 'package:flutter/material.dart';
-
 
 import '../../utils/colors.dart';
 import '../../utils/constants.dart';
@@ -46,16 +46,20 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset("assets/images/tick.png", height: 60,width: 60,),
+                  Image.asset(
+                    "assets/images/tick.png",
+                    height: 60,
+                    width: 60,
+                  ),
                   height12,
                   Text(
                     "Your Profile has been submitted successfully!",
                     style: blackContent,
                   ),
-                  
                   height80,
-                  customThemeButton("Next", () { 
-                    
+                  customThemeButton("Next", () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   }),
                 ],
               ))
@@ -63,6 +67,4 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       ),
     );
   }
-
-  
 }
