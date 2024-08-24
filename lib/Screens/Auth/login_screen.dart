@@ -1,4 +1,5 @@
 import 'package:albrandz_task/Screens/Auth/otp_screen.dart';
+import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/Widgets/sizedBox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,27 +87,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     height30,
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: bColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            )),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      OtpScreen(mob: numberController.text)));
-                        },
-                        child: Center(
-                            child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            "Continue",
-                            style: buttonText,
-                          ),
-                        ))),
+                    customThemeButton("Continue", () { 
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    OtpScreen(mob: numberController.text)));
+                    }),
                   ],
                 ),
               ))
@@ -114,4 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  
 }

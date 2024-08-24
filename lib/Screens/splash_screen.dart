@@ -1,6 +1,6 @@
 import 'package:albrandz_task/Screens/Auth/login_screen.dart';
+import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/utils/colors.dart';
-import 'package:albrandz_task/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -45,28 +45,14 @@ class SplashScreen extends StatelessWidget {
               bottom: 30,
               left: 20,
               right: 20,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: bColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      )),
-                  onPressed: () {
-                    Navigator.push(
+              child: customThemeButton("Let's get rides ->", () { 
+                 Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LoginScreen(),
                       ),
                     );
-                  },
-                  child: Center(
-                      child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      "Lets get rids ->",
-                      style: buttonText,
-                    ),
-                  ))))
+              }))
         ],
       ),
     );
