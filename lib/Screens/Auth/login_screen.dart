@@ -62,12 +62,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     height8,
                     IntlPhoneField(
+                      validator: (value) {
+                    if (value== null) {
+                      return "Please Enter Your Mobile Number";
+                    }
+          
+                    if (!RegExp(r'^[56789]\d{9}$').hasMatch(value.toString())) {
+                      return "Enter Correct Mobile Number";
+                    } else {
+                      return null;
+                    }
+                  },
                       controller: numberController,
                       keyboardType: TextInputType.number,
-                      // disableLengthCheck: true,
+                      
+                      disableLengthCheck: true,
 
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(10)
                       ],
                       flagsButtonPadding: const EdgeInsets.only(left: 8),
                       dropdownIconPosition: IconPosition.trailing,
@@ -85,14 +98,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       onChanged: (phone) {
                         print(phone.completeNumber);
                       },
+                      
                     ),
                     height30,
                     customThemeButton("Continue", () { 
-                      Navigator.push(
+                      if(_formKey.currentState!.validate()){
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
                                     OtpScreen(mob: numberController.text)));
+
+                      }
                     }),
                   ],
                 ),

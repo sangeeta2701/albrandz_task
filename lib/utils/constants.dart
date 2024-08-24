@@ -9,5 +9,5 @@ TextStyle blackMainHeading =
 TextStyle blackContent =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: bColor);
 
-TextStyle hintTextStyle =
-    TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: gColor);
+TextStyle greyTextStyle =
+    TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: gColor);

@@ -24,8 +24,7 @@ class MyApp extends StatelessWidget {
               inputDecorationTheme: InputDecorationTheme(
                   prefixIconColor: gColor,
                   contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                  hintStyle: hintTextStyle,
-                  labelStyle: blackContent,
+                  
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide:

@@ -132,7 +132,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please Enter email";
+                            return "Please Enter otp";
                           } else {
                             return null;
                           }
