@@ -1,11 +1,20 @@
+import 'dart:convert';
+
 import 'package:albrandz_task/Screens/Auth/login_screen.dart';
 import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +54,13 @@ class SplashScreen extends StatelessWidget {
               bottom: 30,
               left: 20,
               right: 20,
-              child: customThemeButton("Let's get rides ->", () { 
-                 Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
+              child: customThemeButton("Let's get rides ->", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
               }))
         ],
       ),

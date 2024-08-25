@@ -5,8 +5,11 @@ import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/Widgets/sizedBox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:pinput/pinput.dart';
-
+import 'package:http/http.dart' as http;
+import '../../Widgets/dialogs/progressbar.dart';
 import '../../utils/colors.dart';
 import '../../utils/constants.dart';
 
@@ -48,22 +51,61 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
-  final focusNode = FocusNode();
+  Future<void> _otpVerify() async {
+    const apiUrl = "https://cba.albrandz.in/cba/api/passenger/verify/otp";
+    Map<String, dynamic> body = {
+      "mobile": widget.mob,
+      "otp": pinController.text
+    };
+    ProgressDialog pds =
+        progresssbar(context, "Requesting...", "Please wait.....", true);
+
+    pds.show();
+    final response = await http.post(Uri.parse(apiUrl), body: body);
+    print(response.body);
+    print(response.statusCode);
+    pds.dismiss();
+
+    if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
+
+      Future.delayed(Duration(seconds: 3), () {
+        Fluttertoast.showToast(msg: "OTP verified successfully");
+        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateProfileScreen(mob: widget.mob)));
+      });
+    } else {
+      pds.dismiss();
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController pinController = TextEditingController();
+  final focusNode = FocusNode();
+  String rn = "";
+
   final defaultPinTheme = PinTheme(
     width: 50,
     height: 50,
     margin: const EdgeInsets.symmetric(horizontal: 8),
-    textStyle: TextStyle(
-      fontSize: 16,
-      color: Color.fromRGBO(10, 31, 50, 1),
-    ),
+    textStyle: blackContent,
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: gColor.withOpacity(0.3)),
+      borderRadius: BorderRadius.circular(5),
+      border: Border.all(color: themeColor),
     ),
   );
+
+  @override
+  void dispose() {
+    pinController.dispose();
+    focusNode.dispose();
+    timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,70 +150,130 @@ class _OtpScreenState extends State<OtpScreen> {
                       style: blackContent,
                     ),
                     height12,
-                    Align(
-                      alignment: Alignment.center,
-                      child: Pinput(
-                        length: 6,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        controller: pinController,
-                        focusNode: focusNode,
-                        androidSmsAutofillMethod:
-                            AndroidSmsAutofillMethod.smsUserConsentApi,
-                        listenForMultipleSmsOnAndroid: true,
-                        defaultPinTheme: defaultPinTheme,
-                        hapticFeedbackType: HapticFeedbackType.heavyImpact,
-                        onCompleted: (pin) {
-                          debugPrint('onCompleted: $pin');
-                          if (_formKey.currentState!.validate()) {}
-                        },
-                        onChanged: (value) {
-                          debugPrint('onChanged: $value');
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please Enter otp";
-                          } else {
-                            return null;
-                          }
-                        },
-                        cursor: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 9),
-                              width: 22,
-                              height: 1,
-                              color: Colors.purple,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          child: Pinput(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please Enter Your OTP";
+                              } else {
+                                return null;
+                              }
+                            },
+                            length: 6,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            controller: pinController,
+                            focusNode: focusNode,
+                            androidSmsAutofillMethod:
+                                AndroidSmsAutofillMethod.smsUserConsentApi,
+                            listenForMultipleSmsOnAndroid: true,
+                            defaultPinTheme: defaultPinTheme,
+                            // hapticFeedbackType: HapticFeedbackType.heavyImpact,
+
+                            onChanged: (value) {
+                              debugPrint('onChanged: $value');
+                            },
+                            cursor: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 9),
+                                  width: 22,
+                                  height: 1,
+                                  color: gColor,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        errorPinTheme: defaultPinTheme.copyBorderWith(
-                          border: Border.all(color: Colors.redAccent),
+
+                            errorPinTheme: defaultPinTheme.copyBorderWith(
+                              border: Border.all(color: Colors.redAccent),
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
+                    // Align(
+                    //   alignment: Alignment.center,
+                    //   child: Pinput(
+                    //     length: 6,
+                    //     keyboardType: TextInputType.number,
+                    //     inputFormatters: [
+                    //       FilteringTextInputFormatter.digitsOnly,
+                    //     ],
+                    //     controller: pinController,
+                    //     focusNode: focusNode,
+                    //     androidSmsAutofillMethod:
+                    //         AndroidSmsAutofillMethod.smsUserConsentApi,
+                    //     listenForMultipleSmsOnAndroid: true,
+                    //     defaultPinTheme: defaultPinTheme,
+                    //     hapticFeedbackType: HapticFeedbackType.heavyImpact,
+                    //     onCompleted: (pin) {
+                    //       debugPrint('onCompleted: $pin');
+                    //       if (_formKey.currentState!.validate()) {}
+                    //     },
+                    //     onChanged: (value) {
+                    //       debugPrint('onChanged: $value');
+                    //     },
+                    //     validator: (value) {
+                    //       if (value!.isEmpty) {
+                    //         return "Please Enter otp";
+                    //       } else {
+                    //         return null;
+                    //       }
+                    //     },
+                    //     cursor: Column(
+                    //       mainAxisAlignment: MainAxisAlignment.end,
+                    //       children: [
+                    //         Container(
+                    //           margin: const EdgeInsets.only(bottom: 9),
+                    //           width: 22,
+                    //           height: 1,
+                    //           color: Colors.purple,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     errorPinTheme: defaultPinTheme.copyBorderWith(
+                    //       border: Border.all(color: Colors.redAccent),
+                    //     ),
+                    //   ),
+                    // ),
                     height30,
                     customThemeButton("Continue", () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateProfileScreen(mob: widget.mob)));
+                      if (_formKey.currentState!.validate()) {
+                        _otpVerify();
+                      }
                     }),
                     height12,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        secondsRemaining > 0
+                            ? Text(
+                                "Resend OTP ",
+                                style: greyTextStyle,
+                              )
+                            : TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "Resend OTP ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: themeColor),
+                                ),
+                              ),
                         Text(
-                          "Resend OTP  ",
-                          style: blackContent,
+                          "after $secondsRemaining seconds",
+                          style: greyTextStyle,
                         ),
-                        Text("($secondsRemaining seconds)")
                       ],
-                    )
+                    ),
                   ],
                 ),
               ))

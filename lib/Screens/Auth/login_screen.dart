@@ -3,8 +3,11 @@ import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/Widgets/sizedBox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-
+import 'package:ndialog/ndialog.dart';
+import 'package:http/http.dart' as http;
+import '../../Widgets/dialogs/progressbar.dart';
 import '../../utils/colors.dart';
 import '../../utils/constants.dart';
 
@@ -16,6 +19,41 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final String countryCode = "+91";
+  
+
+  Future<void> _loginUser() async {
+    const apiUrl = "https://cba.albrandz.in/cba/api/passenger/login/otp";
+    Map<String, dynamic> body = {
+      "mobile": countryCode + numberController.text,
+    };
+    ProgressDialog pds =
+        progresssbar(context, "Requesting...", "Please wait.....", true);
+
+    pds.show();
+    final response = await http.post(Uri.parse(apiUrl), body: body);
+    print(response.body);
+    print(response.statusCode);
+    pds.dismiss();
+
+    if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
+
+      Future.delayed(Duration(seconds: 3), () {
+        Fluttertoast.showToast(msg: "OTP sent successfully");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpScreen(mob: body['mobile']),
+          ),
+        );
+      });
+    } else {
+      pds.dismiss();
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController numberController = TextEditingController();
   @override
@@ -63,21 +101,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     height8,
                     IntlPhoneField(
                       validator: (value) {
-                    if (value== null) {
-                      return "Please Enter Your Mobile Number";
-                    }
-          
-                    if (!RegExp(r'^[56789]\d{9}$').hasMatch(value.toString())) {
-                      return "Enter Correct Mobile Number";
-                    } else {
-                      return null;
-                    }
-                  },
+                        if (value == null) {
+                          return "Please Enter Your Mobile Number";
+                        } else {
+                          return null;
+                        }
+                      },
                       controller: numberController,
                       keyboardType: TextInputType.number,
-                      
                       disableLengthCheck: true,
-
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(10)
@@ -94,21 +126,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       initialCountryCode: 'IN',
-
                       onChanged: (phone) {
                         print(phone.completeNumber);
                       },
-                      
                     ),
                     height30,
-                    customThemeButton("Continue", () { 
-                      if(_formKey.currentState!.validate()){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    OtpScreen(mob: numberController.text)));
-
+                    customThemeButton("Continue", () {
+                      if (_formKey.currentState!.validate()) {
+                        _loginUser();
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Please enter required Field");
                       }
                     }),
                   ],
@@ -118,6 +146,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  
 }
