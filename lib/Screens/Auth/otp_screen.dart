@@ -61,7 +61,11 @@ class _OtpScreenState extends State<OtpScreen> {
         progresssbar(context, "Requesting...", "Please wait.....", true);
 
     pds.show();
-    final response = await http.post(Uri.parse(apiUrl), body: body);
+    final response = await http.post(Uri.parse(apiUrl), body: body,
+     headers: {
+      'Content-Type': 'application/json',
+
+    });
     print(response.body);
     print(response.statusCode);
     pds.dismiss();
@@ -117,7 +121,7 @@ class _OtpScreenState extends State<OtpScreen> {
             top: 0,
             left: 0,
             right: 0,
-            bottom: 380,
+            bottom: 360,
             child: Container(
               width: double.infinity,
               constraints: BoxConstraints(maxHeight: 300),

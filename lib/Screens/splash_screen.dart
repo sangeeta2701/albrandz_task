@@ -1,10 +1,8 @@
-import 'dart:convert';
 
 import 'package:albrandz_task/Screens/Auth/login_screen.dart';
 import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

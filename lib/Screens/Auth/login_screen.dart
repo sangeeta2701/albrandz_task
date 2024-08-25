@@ -20,12 +20,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final String countryCode = "+91";
-  
 
   Future<void> _loginUser() async {
+    String fullNumber = countryCode+numberController.text;
+
     const apiUrl = "https://cba.albrandz.in/cba/api/passenger/login/otp";
     Map<String, dynamic> body = {
-      "mobile": countryCode + numberController.text,
+      "mobile": fullNumber,
     };
     ProgressDialog pds =
         progresssbar(context, "Requesting...", "Please wait.....", true);
@@ -35,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     print(response.body);
     print(response.statusCode);
     pds.dismiss();
+    print("My Number: ${fullNumber}");
 
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
@@ -100,12 +102,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     height8,
                     IntlPhoneField(
-                      validator: (value) {
-                        if (value == null) {
-                          return "Please Enter Your Mobile Number";
-                        } else {
-                          return null;
+                      validator: (phone) {
+                        if (phone == null || phone.number.isEmpty) {
+                          return 'Phone number is required';
+                        } else if (phone.number.length < 10) {
+                          return 'Phone number must be at least 10 digits';
                         }
+                        return null;
                       },
                       controller: numberController,
                       keyboardType: TextInputType.number,
