@@ -1,4 +1,7 @@
 import 'package:albrandz_task/Screens/Home/map2.dart';
+import 'package:albrandz_task/Screens/Home/map3.dart';
+import 'package:albrandz_task/Screens/Home/map4.dart';
+import 'package:albrandz_task/Screens/Home/map5.dart';
 import 'package:albrandz_task/Screens/Home/map_screen.dart';
 import 'package:albrandz_task/Widgets/sizedBox.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Map2()));
+                          MaterialPageRoute(builder: (context) => Map5()));
                     },
                   ),
                   height24,

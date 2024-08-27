@@ -43,6 +43,8 @@ dependencies:
   http: ^1.0.0
   fluttertoast: ^8.2.4
   ndialog: ^4.3.0
+  permission_handler: ^10.2.0
+  geocoding: ^3.0.0
  
 
 dev_dependencies:
