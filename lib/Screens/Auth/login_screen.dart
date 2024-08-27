@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:albrandz_task/Screens/Auth/otp_screen.dart';
 import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/Widgets/sizedBox.dart';
@@ -22,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final String countryCode = "+91";
 
   Future<void> _loginUser() async {
-    String fullNumber = countryCode+numberController.text;
+    String fullNumber = countryCode+(numberController.text ?? "");
 
     const apiUrl = "https://cba.albrandz.in/cba/api/passenger/login/otp";
     Map<String, dynamic> body = {
@@ -32,13 +34,14 @@ class _LoginScreenState extends State<LoginScreen> {
         progresssbar(context, "Requesting...", "Please wait.....", true);
 
     pds.show();
-    final response = await http.post(Uri.parse(apiUrl), body: body);
+    final response = await http.post(Uri.parse(apiUrl), body: jsonEncode(body),
+    headers: {"Content-Type": "application/json"});
     print(response.body);
     print(response.statusCode);
     pds.dismiss();
     print("My Number: ${fullNumber}");
 
-    if (response.statusCode == 200) {
+    if (body['mobile'] != null && response.statusCode == 200) {
       // ignore: use_build_context_synchronously
 
       Future.delayed(Duration(seconds: 3), () {
@@ -52,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     } else {
       pds.dismiss();
-      Fluttertoast.showToast(msg: "Something went wrong");
+      Fluttertoast.showToast(msg: "Mobile number is missing");
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:albrandz_task/Screens/splash_screen.dart';
 import 'package:albrandz_task/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+import 'Screens/confirmation_screen.dart';
 import 'utils/colors.dart';
 
 void main() {

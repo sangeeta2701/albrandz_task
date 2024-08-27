@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:albrandz_task/Screens/Profile/create_profile_screen.dart';
 import 'package:albrandz_task/Widgets/customThemeButton.dart';
@@ -51,39 +52,73 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
+  // Future<void> _otpVerify() async {
+  //   const apiUrl = "https://cba.albrandz.in/cba/api/passenger/verify/otp";
+  //   Map<String, dynamic> body = {
+  //     "mobile": widget.mob,
+  //     "otp": pinController.text
+  //   };
+  //   ProgressDialog pds =
+  //       progresssbar(context, "Requesting...", "Please wait.....", true);
+
+  //   pds.show();
+  //   final response = await http.post(Uri.parse(apiUrl), body: body, headers: {
+  //     'Content-Type': 'application/json',
+  //   });
+  //   print(response.body);
+  //   print(response.statusCode);
+  //   pds.dismiss();
+
+  //   if (response.statusCode == 200) {
+  //     // ignore: use_build_context_synchronously
+
+  //     Future.delayed(Duration(seconds: 3), () {
+  //       Fluttertoast.showToast(msg: "OTP verified successfully");
+  //       Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //               builder: (context) => CreateProfileScreen(mob: widget.mob)));
+  //     });
+  //   } else {
+  //     pds.dismiss();
+  //     Fluttertoast.showToast(msg: "Something went wrong");
+  //   }
+  // }
+  bool isLoading = false;
   Future<void> _otpVerify() async {
-    const apiUrl = "https://cba.albrandz.in/cba/api/passenger/verify/otp";
-    Map<String, dynamic> body = {
-      "mobile": widget.mob,
-      "otp": pinController.text
-    };
-    ProgressDialog pds =
-        progresssbar(context, "Requesting...", "Please wait.....", true);
+    if (_formKey.currentState!.validate()) {
+      const apiUrl = "https://cba.albrandz.in/cba/api/passenger/verify/otp";
+      Map<String, dynamic> body = {
+        "mobile": widget.mob,
+        "otp": pinController.text
+      };
 
-    pds.show();
-    final response = await http.post(Uri.parse(apiUrl), body: body,
-     headers: {
-      'Content-Type': 'application/json',
+      ProgressDialog pds =
+          progresssbar(context, "Requesting...", "Please wait.....", true);
 
-    });
-    print(response.body);
-    print(response.statusCode);
-    pds.dismiss();
+      pds.show();
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: jsonEncode(body),
+        headers: {'Content-Type': 'application/json'},
+      );
 
-    if (response.statusCode == 200) {
-      // ignore: use_build_context_synchronously
-
-      Future.delayed(Duration(seconds: 3), () {
-        Fluttertoast.showToast(msg: "OTP verified successfully");
-        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateProfileScreen(mob: widget.mob)));
-      });
-    } else {
+      print("My OTP Response: ${response.body}");
+      print(response.statusCode);
       pds.dismiss();
-      Fluttertoast.showToast(msg: "Something went wrong");
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: "OTP verified successfully");
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateProfileScreen(mob: widget.mob),
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
     }
   }
 
@@ -173,9 +208,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             ],
                             controller: pinController,
                             focusNode: focusNode,
-                            androidSmsAutofillMethod:
-                                AndroidSmsAutofillMethod.smsUserConsentApi,
-                            listenForMultipleSmsOnAndroid: true,
+                           
                             defaultPinTheme: defaultPinTheme,
                             // hapticFeedbackType: HapticFeedbackType.heavyImpact,
 

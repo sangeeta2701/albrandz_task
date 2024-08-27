@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:albrandz_task/Screens/confirmation_screen.dart';
 import 'package:albrandz_task/Widgets/customThemeButton.dart';
 import 'package:albrandz_task/Widgets/dialogs/progressbar.dart';
@@ -35,6 +37,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     'Others',
   ];
   bool checkVal = false;
+  bool isLoading = false;
 
   Future<void> _createProfile() async {
     const apiUrl = "https://cba.albrandz.in/cba/api/passenger/profile";
@@ -49,11 +52,11 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         progresssbar(context, "Requesting...", "Please wait.....", true);
 
     pds.show();
-    final response = await http.post(Uri.parse(apiUrl), body: body, headers: {
+    final response = await http.post(Uri.parse(apiUrl), body: jsonEncode(body), headers: {
       'Content-Type': 'application/json',
 
     });
-    print(response.body);
+    print("My Profile Response:${response.body}");
     print(response.statusCode);
     pds.dismiss();
 
@@ -62,7 +65,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
       Future.delayed(Duration(seconds: 3), () {
         Fluttertoast.showToast(msg: "Profile Created successfully");
-        Navigator.push(context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => ConfirmationScreen()));
       });
     } else {
@@ -244,7 +247,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                   style: greyTextStyle,
                                 ),
                                 Container(
-                                  height: 40,
+                                  height: 50,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
@@ -303,7 +306,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             prefixIcon: Icon(
-                          Icons.person_2_outlined,
+                          Icons.lock_outline,
                           color: gColor,
                         )),
                         validator: (value) {
@@ -330,10 +333,14 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       ),
                       height30,
                       customThemeButton("Continue", () {
-                        if (_formKey.currentState!.validate()) {
-                          _createProfile();
-                        }
-                      })
+                         if (_formKey.currentState!.validate()) {
+    setState(() {
+      isLoading = true;
+    });
+    _createProfile();
+  }
+                      },
+                      )
                     ],
                   ),
                 ),
