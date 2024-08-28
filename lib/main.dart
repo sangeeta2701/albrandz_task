@@ -1,9 +1,6 @@
-import 'package:albrandz_task/Screens/Home/home_screen.dart';
 import 'package:albrandz_task/Screens/splash_screen.dart';
-import 'package:albrandz_task/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'Screens/confirmation_screen.dart';
 import 'utils/colors.dart';
 
 void main() {
@@ -18,8 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: SplashScreen(),
-      home: HomeScreen(),
+      home: SplashScreen(),
       theme: ThemeData(
              
               primaryColor: themeColor,
